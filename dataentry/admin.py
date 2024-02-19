@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Student
+from .models import Student, Customer
 
 # Register your models here.
 
@@ -7,4 +7,10 @@ from .models import Student
 class StudentAdmin(admin.ModelAdmin):
     list_display = [
         'id', 'roll_no', 'name', 'age'
+    ]
+
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = [
+        'id', 'customer_name', 'country'
     ]
