@@ -65,4 +65,4 @@ class Command(BaseCommand):
             #     for data in reader
             # ]
 
-        self.stdout.write(self.style.SUCCESS('Data successfully imported from CSV.'))
+        self.stdout.write(self.style.SUCCESS(f'Data successfully imported from CSV to "{model_name}" model.'))
