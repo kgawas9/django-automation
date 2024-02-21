@@ -3,6 +3,7 @@ Import data functionality using csv file.
 """
 
 from django.core.management.base import BaseCommand, CommandParser, CommandError
+from django.db import DataError
 
 # from dataentry.models import Student
 from django.apps import apps
@@ -25,6 +26,7 @@ class Command(BaseCommand):
         with open(kwargs['file_path'], "r") as file:
             # returns DictReader object
             reader = csv.DictReader(file)
+            csv_header = reader.fieldnames
             
             # Insert data using list comprehension
             # [Student.objects.create(roll_no = data['roll_no'], name=data['name'], age=data['age']) for data in reader if not Student.objects.filter(roll_no=data['roll_no']).exists()]
@@ -52,11 +54,19 @@ class Command(BaseCommand):
             if not model:
                 raise CommandError(f"Unable to find '{model_name}' in registered applications.")
                 
+            # get model field name
+            model_fields = [field.name for field in model._meta.fields if not field.name == 'id']
+
+            # compare csv header with model field names
+            if csv_header != model_fields:
+                raise DataError(f"Headers of CSV file doesn't match with '{model.__name__}' table fields.")
+
             # insert all the rows into table
             try:
                 [model.objects.create(**data) for data in reader]
+
             except Exception as e:
-                raise LookupError(f"Unable to insert data into table {model_name}. {e}")
+                raise LookupError(f"Unable to insert data into {model_name} table. {e}")
 
             # [
             #     kwargs['model_name'].objects.create(**data)
