@@ -34,6 +34,8 @@ def import_data(request):
                 messages.success(request, "Data successfully imported.")
 
             except Exception as e:
+                Upload.objects.get(file=upload.file).delete()
+                print('File deleted.')
                 messages.error(request, f"Error while importing data. {e}")
             
 

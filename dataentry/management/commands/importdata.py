@@ -8,6 +8,7 @@ from django.db import DataError
 # from dataentry.models import Student
 from django.apps import apps
 
+import os
 import csv
 
 class Command(BaseCommand):
@@ -52,6 +53,8 @@ class Command(BaseCommand):
                     # self.stdout.write(self.style.WARNING(f"{app_config.label} - unable to look up {model_name}"))
 
             if not model:
+                file.close()
+                os.remove(path=kwargs['file_path'])
                 raise CommandError(f"Unable to find '{model_name}' in registered applications.")
                 
             # get model field name
@@ -59,6 +62,8 @@ class Command(BaseCommand):
 
             # compare csv header with model field names
             if csv_header != model_fields:
+                file.close()
+                os.remove(path=kwargs['file_path'])
                 raise DataError(f"Headers of CSV file doesn't match with '{model.__name__}' table fields.")
 
             # insert all the rows into table
@@ -66,6 +71,8 @@ class Command(BaseCommand):
                 [model.objects.create(**data) for data in reader]
 
             except Exception as e:
+                file.close()
+                os.remove(path=kwargs['file_path'])
                 raise LookupError(f"Unable to insert data into {model_name} table. {e}")
 
             # [
