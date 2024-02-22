@@ -7,6 +7,7 @@ from django.db import DataError
 
 # from dataentry.models import Student
 from django.apps import apps
+from dataentry.utils import check_upload_csv_errors
 
 import os
 import csv
@@ -22,13 +23,27 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         """Create and update data in database using csv file."""
-        self.stdout.write(f'{kwargs.get("file_path", "")}')
+        # self.stdout.write(f'{kwargs.get("file_path", "")}')
+
+        model = check_upload_csv_errors(kwargs['file_path'], kwargs['model_name'].capitalize())
 
         with open(kwargs['file_path'], "r") as file:
             # returns DictReader object
             reader = csv.DictReader(file)
             csv_header = reader.fieldnames
             
+            # insert all the rows into table
+            try:
+                [model.objects.create(**data) for data in reader]
+
+            except Exception as e:
+                file.close()
+                os.remove(path=kwargs['file_path'])
+                raise LookupError(f"Unable to insert data into {model.__name__} table. {e}")
+
+            
+            # =====================================================
+
             # Insert data using list comprehension
             # [Student.objects.create(roll_no = data['roll_no'], name=data['name'], age=data['age']) for data in reader if not Student.objects.filter(roll_no=data['roll_no']).exists()]
 
@@ -39,47 +54,12 @@ class Command(BaseCommand):
             #     for data in reader
             # ]
 
-            # Search for models across all the installed apps
-            model = None
-            for app_config in apps.get_app_configs():
-
-                model_name = kwargs['model_name'].capitalize()
-
-                try:
-                    model = apps.get_model(app_config.label, model_name)
-                    break
-                except LookupError:
-                    continue
-                    # self.stdout.write(self.style.WARNING(f"{app_config.label} - unable to look up {model_name}"))
-
-            if not model:
-                file.close()
-                os.remove(path=kwargs['file_path'])
-                raise CommandError(f"Unable to find '{model_name}' in registered applications.")
-                
-            # get model field name
-            model_fields = [field.name for field in model._meta.fields if not field.name == 'id']
-
-            # compare csv header with model field names
-            if csv_header != model_fields:
-                file.close()
-                os.remove(path=kwargs['file_path'])
-                raise DataError(f"Headers of CSV file doesn't match with '{model.__name__}' table fields.")
-
-            # insert all the rows into table
-            try:
-                [model.objects.create(**data) for data in reader]
-
-            except Exception as e:
-                file.close()
-                os.remove(path=kwargs['file_path'])
-                raise LookupError(f"Unable to insert data into {model_name} table. {e}")
-
             # [
             #     kwargs['model_name'].objects.create(**data)
             #     if not Student.objects.filter(roll_no=data['roll_no']).exists()
             #     else self.stdout.write(self.style.WARNING(f"{data['roll_no']} already exists in DB."))
             #     for data in reader
             # ]
+            # =====================================================
 
-        self.stdout.write(self.style.SUCCESS(f'Data successfully imported from CSV to "{model_name}" model.'))
+        self.stdout.write(self.style.SUCCESS(f'Data successfully imported from CSV to "{model.__name__}" model.'))

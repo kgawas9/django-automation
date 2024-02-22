@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.conf import settings
 from django.apps import apps
 from django.core.management import call_command
 from django.contrib import messages
 
-from .utils import get_custom_models
+from .utils import get_custom_models, check_upload_csv_errors
 from uploads.models import Upload
 
 import os
+import time
+from .tasks import celery_test_task, import_data_task
 # Create your views here.
 
 
@@ -27,22 +30,22 @@ def import_data(request):
             base_dir = str(settings.BASE_DIR)
             file_path = base_dir + relative_path
 
+            # check for any potential error in csv
+            try:
+                model = check_upload_csv_errors(filepath=file_path, model_name=model_name)
+            except Exception as e:
+                messages.error(request, str(e))
+                return redirect('import-data')
 
             # trigger the importdata command
-            try:
-                call_command('importdata', file_path, model_name)
-                messages.success(request, "Data successfully imported.")
+            import_data_task.delay(upload_id=upload.id, file_path=file_path, model_name=model_name)
 
-            except Exception as e:
-                Upload.objects.get(file=upload.file).delete()
-                print('File deleted.')
-                messages.error(request, f"Error while importing data. {e}")
-            
-
+            messages.success(request, 'Your data is being imported, you will be notified once its done.')
             return redirect('import-data')
         
         else:
-            raise ValueError('File or model name not selected.')
+            messages.error(request, f"File or model name not selected.")
+            return redirect('import-data')
     
     custom_models = get_custom_models()
 
@@ -51,3 +54,11 @@ def import_data(request):
     }
 
     return render(request, 'dataentry/importdata.html', context=context)
+
+
+
+def celery_test(request):
+    # Execute the celery task
+    celery_test_task.delay()
+    
+    return HttpResponse('<h4>Function successfully executed</h4>')
