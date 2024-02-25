@@ -70,3 +70,17 @@ def send_email_communication(email_subject, message, to_email):
         mail.send()
     except Exception as e:
         raise e
+
+
+
+def get_model(model_name):
+    model = None
+    for app_config in apps.get_app_configs():
+        try:
+            model = apps.get_model(app_config.label, model_name.capitalize())
+            # print(model.__name__)
+            break
+        except Exception as e:
+            continue
+
+    return model

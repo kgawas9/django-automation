@@ -5,12 +5,12 @@ from django.apps import apps
 from django.core.management import call_command
 from django.contrib import messages
 
-from .utils import get_custom_models, check_upload_csv_errors
+from .utils import get_custom_models, check_upload_csv_errors, get_model
 from uploads.models import Upload
 
 import os
 import time
-from .tasks import celery_test_task, import_data_task
+from .tasks import celery_test_task, import_data_task, export_model_data
 # Create your views here.
 
 
@@ -56,6 +56,28 @@ def import_data(request):
     return render(request, 'dataentry/importdata.html', context=context)
 
 
+
+def export_data(request):
+    if request.method == "POST":
+        model_name = request.POST.get('model_name')
+
+        model = get_model(model_name=model_name)
+
+        if not model:
+            messages.error(request, "Unable to export data. Contact your administrator.")
+            return redirect('export-data')
+        
+        export_model_data.delay(model_name)
+
+        messages.success(request, f"Data from '{model_name}' table is being exported. You will be notified once it's done.")
+        return redirect('export-data')
+
+    models = get_custom_models()
+    context = {
+        'custom_models': models
+    }
+
+    return render(request, 'dataentry/exportdata.html', context=context)
 
 def celery_test(request):
     # Execute the celery task

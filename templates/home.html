@@ -5,4 +5,9 @@
 
 {% block main_content %}
     <h4 class="text-center" style="padding-top: 50px;">Automate the boring stuff with Python - Django!</h4>
+
+    <div style="padding-top: 20px">
+        <a style="padding: 20px" href="{% url 'import-data' %}">Import data</a>
+        <a style="padding: 20px" href="{% url 'export-data' %}">Export data</a>
+    </div>
 {% endblock main_content %}

@@ -7,6 +7,7 @@ from django.conf import settings
 
 from django.apps import apps
 
+from dataentry.utils import get_model
 from datetime import datetime
 import csv
 import os
@@ -33,14 +34,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         directory_path = get_default_directory_to_export_files()
 
-        model = None
-        for app_config in apps.get_app_configs():
-            try:
-                model = apps.get_model(app_config.label, kwargs['model_name'].capitalize())
-                # print(model.__name__)
-                break
-            except:
-                continue
+        model = get_model(model_name=kwargs['model_name'])
         
         if not model:
             raise CommandError(f"Unable to find table in database with name {kwargs['model_name']}.")

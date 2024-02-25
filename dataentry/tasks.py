@@ -47,3 +47,13 @@ def import_data_task(upload_id, file_path, model_name):
         raise e
     
     return 'Data successfully imported.'
+
+
+
+@app.task
+def export_model_data(model_name):
+    try:
+        call_command('exportdatabasedonmodel', model_name)
+    
+    except Exception as e:
+        raise e
