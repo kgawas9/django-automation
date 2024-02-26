@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.conf import settings
-from django.apps import apps
-from django.core.management import call_command
+
 from django.contrib import messages
 
 from .utils import get_custom_models, check_upload_csv_errors, get_model
@@ -78,6 +77,8 @@ def export_data(request):
     }
 
     return render(request, 'dataentry/exportdata.html', context=context)
+
+
 
 def celery_test(request):
     # Execute the celery task

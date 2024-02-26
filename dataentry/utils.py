@@ -6,6 +6,7 @@ from django.conf import settings
 
 import os
 import csv
+from datetime import datetime
 
 
 def get_custom_models():
@@ -62,11 +63,18 @@ def check_upload_csv_errors(filepath, model_name):
 
 
 
-def send_email_communication(email_subject, message, to_email):
+def send_email_communication(email_subject, message, to_email, attachment=None):
     try:
         from_email = settings.DEFAULT_FROM_EMAIL
 
         mail = EmailMessage(email_subject, message, from_email, to_email)
+        
+        print(attachment)
+        
+        if attachment:
+            print(attachment)
+            mail.attach_file(attachment)
+
         mail.send()
     except Exception as e:
         raise e
@@ -84,3 +92,21 @@ def get_model(model_name):
             continue
 
     return model
+
+
+def get_default_directory_to_export_files():
+    directory_name = 'export_data'
+
+    export_dir_path = os.path.join(settings.MEDIA_ROOT, directory_name)
+
+    if not os.path.exists(export_dir_path):
+        os.makedirs(export_dir_path)
+
+    return export_dir_path
+
+
+def get_directory_path(model_name):
+    directory_path = get_default_directory_to_export_files()
+    file_path = os.path.join(settings.BASE_DIR, f"{directory_path}\{model_name.lower()}-data-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')}.csv")
+
+    return file_path

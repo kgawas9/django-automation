@@ -30,11 +30,12 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument('model_name', type=str, help="Provide model name to export the data.")
+        parser.add_argument('file_path', type=str)
+
 
     def handle(self, *args, **kwargs):
-        directory_path = get_default_directory_to_export_files()
-
         model = get_model(model_name=kwargs['model_name'])
+        file_path = kwargs['file_path']
         
         if not model:
             raise CommandError(f"Unable to find table in database with name {kwargs['model_name']}.")
@@ -43,9 +44,7 @@ class Command(BaseCommand):
         # fetch data from model/table
         extract_data = model.objects.all()
 
-        file_path = os.path.join(settings.BASE_DIR, f"{directory_path}\{model.__name__.lower()}-data-{datetime.now().strftime('%Y-%m-%d-%H-%M-%S-%f')}.csv")
-
-
+        
         # download data
         with open(file_path, "w", newline="") as file:
             writer = csv.writer(file)

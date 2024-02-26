@@ -5,7 +5,7 @@ from django.conf import settings
 from uploads.models import Upload
 from automation_project.celery import app
 
-from .utils import send_email_communication
+from .utils import send_email_communication, get_directory_path
 
 import time
 
@@ -53,7 +53,18 @@ def import_data_task(upload_id, file_path, model_name):
 @app.task
 def export_model_data(model_name):
     try:
-        call_command('exportdatabasedonmodel', model_name)
+        file_path = get_directory_path(model_name)
+        call_command('exportdatabasedonmodel', model_name, file_path)
     
     except Exception as e:
         raise e
+    
+    # Send email with attachment
+
+
+    email_subject = f"data exported successfully for {model_name} model"
+    message = f"Export data successful. Please find the attached file."
+    to_email = ['kgawas9@gmail.com']
+    send_email_communication(email_subject, message=message, to_email=to_email, attachment=file_path)
+
+    return 'Export data task executed successfully.'
