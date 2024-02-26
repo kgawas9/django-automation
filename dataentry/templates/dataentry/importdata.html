@@ -5,30 +5,36 @@
 {% block title %}Import Data{% endblock title %}
 
 {% block main_content %}
-    <h4 class="text-center" style="padding-top: 50px;">Import data to database table!</h4>
 
-    <form action="{% url 'import-data' %}" method="POST" enctype="multipart/form-data" style="max-width: 600px; margin: auto; padding-top: 50px;">
-        {% csrf_token %}
+    <div class="card mt-5 text-bg-info shadow" style="max-width: 600px; margin: auto; padding: 50px; border-radius: 10px">
+        <h4 class="text-center">Import data to database table!</h4>
 
-        <div class="form-group">
-            <label for="file_path">Upload CSV File</label>
-            <input type="file" name="file_path" class="form-control" required>
-        </div>
+        <form action="{% url 'import-data' %}" method="POST" enctype="multipart/form-data" style="max-width: 600px; margin: auto; padding-top: 50px;">
+            {% csrf_token %}
 
-        <div class="form-group">
-            <label for="model_name">Select Database Table</label>
-            <select name="model_name" class="form-control" required>
-                <option value="" disabled selected>Select</option>
-                {% for model in custom_models %}
-                    <option value="{{ model }}">{{ model }}</option>
-                {% endfor %}
-            </select>
-        </div>
+            <div class="form-group">
+                <label for="file_path">Upload CSV File</label>
+                <input type="file" name="file_path" class="form-control" required>
+            </div>
 
-        <input type="submit" value="Import Data" class="btn btn-primary">
+            <div class="form-group">
+                <label for="model_name">Select Database Table</label>
+                <select name="model_name" class="form-control" required>
+                    <option value="" disabled selected>Select</option>
+                    {% for model in custom_models %}
+                        <option value="{{ model }}">{{ model }}</option>
+                    {% endfor %}
+                </select>
+                
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" value="Import Data" class="btn btn-danger">
+            </div>
 
-        <div class="form-group" style="padding-top: 20px;">
-            {% include 'includes/alerts.html' %}
-        </div>
-    </form>
+            <div class="form-group" style="padding-top: 20px;">
+                {% include 'includes/alerts.html' %}
+            </div>
+        </form>
+    </div>
 {% endblock main_content %}

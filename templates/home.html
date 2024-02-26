@@ -4,10 +4,83 @@
 
 
 {% block main_content %}
+
     <h4 class="text-center" style="padding-top: 50px;">Automate the boring stuff with Python - Django!</h4>
 
-    <div style="padding-top: 20px">
-        <a style="padding: 20px" href="{% url 'import-data' %}">Import data</a>
-        <a style="padding: 20px" href="{% url 'export-data' %}">Export data</a>
+    <div class="container" style="padding: 50px;">
+        <div class="row pt-5">
+            <!-- Import data -->
+            <div class="col-md-4">
+                <a href="{% url 'import-data' %}" class="text-decoration-none text-dark">
+                    <div class="card text-bg-success shadow mb-3">
+                        <div class="card-header">Import data</div>
+                        <div class="card-body">
+                            <p class="card-text">Imports data from CSV file to any table.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- Export Data -->
+            <div class="col-md-4">
+                <a href="{% url 'export-data' %}" class="text-decoration-none text-dark">
+                    <div class="card text-bg-warning shadow mb-3">
+                        <div class="card-header">Export data</div>
+                        <div class="card-body">
+                            <p class="card-text">Export data from any table to csv.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+    
+            <!-- Bulk Emails -->
+            <div class="col-md-4">
+                <a href="{% url 'export-data' %}" class="text-decoration-none text-dark">
+                    <div class="card text-bg-danger shadow mb-3">
+                        <div class="card-header">Export data</div>
+                        <div class="card-body">
+                            <p class="card-text">Export data from any table to csv.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    
+        <div class="row pt-5">
+            <!-- Email Tracking -->
+            <div class="col-md-4">
+                <a href="{% url 'export-data' %}" class="text-decoration-none text-dark">
+                    <div class="card text-bg-danger shadow mb-3">
+                        <div class="card-header">Email Tracking</div>
+                        <div class="card-body">
+                            <p class="card-text">Export data from any table to csv.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+         <!-- Compress Images -->
+         <div class="col-md-4">
+            <a href="{% url 'export-data' %}" class="text-decoration-none text-dark">
+                <div class="card text-bg-warning shadow mb-3">
+                    <div class="card-header">Export data</div>
+                    <div class="card-body">
+                        <p class="card-text">Export data from any table to csv.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    
+         <!-- Web Scraping -->
+            <div class="col-md-4">
+                <a href="{% url 'export-data' %}" class="text-decoration-none text-dark">
+                    <div class="card text-bg-success shadow mb-3">
+                        <div class="card-header">Export data</div>
+                        <div class="card-body">
+                            <p class="card-text">Export data from any table to csv.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
 {% endblock main_content %}

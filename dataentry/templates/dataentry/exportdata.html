@@ -5,31 +5,32 @@
 {% block title %}Export data{% endblock title %}
 
 {% block main_content %}
-
-    <h4 class="text-center" style="padding-top: 50px;">Export data from database table!</h4>
-    
-    <form action="{% url 'export-data' %}" method="POST" style="max-width: 600px; margin: auto; padding-top:50px">
-        {% csrf_token %}
-
-        <div class="form-group">
-            <label for="model_name">Select the table to export data</label>
-            <select name="model_name" class="form-control" required>
-                <option value="" disabled selected>Select</option>
-                {% for model in custom_models %}
-                    <option value="{{ model }}">{{ model }}</option>
-                {% endfor %}
-            </select>
-            
-        </div>
-
-        <div class="form-group">
-            <input type=submit value="Export data" class="btn btn-success"/>
-        </div>
+    <div class="card mt-5 text-bg-info shadow" style="max-width: 600px; margin: auto; padding: 50px; border-radius: 10px">
+        <h4 class="text-center">Export data from database table!</h4>
         
-        <div class="form-group">
-            {% include 'includes/alerts.html' %}
-        </div>
-    </form>
+        <form action="{% url 'export-data' %}" method="POST" style="max-width: 600px; padding-top:50px;">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="model_name">Select the table to export data</label>
+                <select name="model_name" class="form-control" required>
+                    <option value="" disabled selected>Select</option>
+                    {% for model in custom_models %}
+                        <option value="{{ model }}">{{ model }}</option>
+                    {% endfor %}
+                </select>
+                
+            </div>
+
+            <div class="form-group">
+                <input type=submit value="Export data" class="btn btn-danger"/>
+            </div>
+            
+            <div class="form-group">
+                {% include 'includes/alerts.html' %}
+            </div>
+        </form>
+    </div>
 
 
 
