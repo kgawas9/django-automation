@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Registration{% endblock title %}
+
+{% block main_content %}
+
+    {% load crispy_forms_tags %}
+    <div class='container mt-5' style="max-width: 600px">
+        <h4 class="text-center">Register yourself</h4>
+        <form action='{% url "register" %}' method='POST'>
+            {% csrf_token %}
+            
+            <div class="form-group">
+                {{ form | crispy }}
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Register" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+{% endblock main_content %}
