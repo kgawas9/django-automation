@@ -1,24 +1,21 @@
 {% extends 'base.html' %}
 
-{% block title %}Registration{% endblock title %}
+{% block title %}Login{% endblock title %}
 
 {% block main_content %}
-
     {% load crispy_forms_tags %}
-    <div class='container mt-5 p-3 shadow rounded' style="max-width: 600px">
+    <div class='container mt-5 p-3 shadow rounded' style="max-width: 600px;">
         <h4 class="text-center">Register yourself</h4>
-        <form action='{% url "register" %}' method='POST'>
+        <form action="{% url 'login' %}" method='POST'>
             {% csrf_token %}
-            
             <div class="form-group">
                 {{ form | crispy }}
             </div>
- 
+
             <div class="form-group">
-                <input type="submit" value="Register" class="btn btn-success" />
+                <input type="submit" value="Login" class="btn btn-success" />
             </div>
         </form>
-
         {% include 'includes/alerts.html' %}
     </div>
 {% endblock main_content %}

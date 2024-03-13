@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.conf import settings
@@ -13,6 +14,7 @@ from .tasks import celery_test_task, import_data_task, export_model_data
 # Create your views here.
 
 
+@login_required(login_url='login')
 def import_data(request):
     if request.method == 'POST':
         file_path = request.FILES.get('file_path')
@@ -56,6 +58,7 @@ def import_data(request):
 
 
 
+@login_required(login_url='login')
 def export_data(request):
     if request.method == "POST":
         model_name = request.POST.get('model_name')
@@ -80,6 +83,7 @@ def export_data(request):
 
 
 
+@login_required(login_url='login')
 def celery_test(request):
     # Execute the celery task
     celery_test_task.delay()
