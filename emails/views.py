@@ -6,7 +6,7 @@ from .models import EmailList
 from .forms import EmailForm
 from dataentry.utils import send_email_communication
 
-import os
+from .tasks import send_email_to_list
 
 # Create your views here.
 
@@ -24,7 +24,7 @@ def send_email(request):
             # form = email_form.save()
             # print(email_form.email_list)
             
-            to_email_list = [email for email in subscriber_list]
+            to_email_list = [email.email_address for email in subscriber_list]
             email_subject = request.POST.get('subject')
             email_body = request.POST.get('body')
 
@@ -38,11 +38,13 @@ def send_email(request):
             # with open(attachment_path, 'wb') as destination:
             #     for chunk in attachment_file.chunks():
             #         destination.write(chunk)
-            
-            send_email_communication(email_subject=email_subject, message=email_body, to_email=to_email_list, attachment=attachment)
-            
 
-            messages.success(request, 'Email sent successfully.')
+            # send_email_communication(email_subject=email_subject, message=email_body, to_email=to_email_list, attachment=attachment)
+
+            # using celery
+            send_email_to_list.delay(subject=email_subject, message=email_body, to=to_email_list, attachment=attachment)
+
+            messages.success(request, 'Your emails are being sent, you will be notified once its done.')
             return redirect('send-email')
         
     email_form = EmailForm()
