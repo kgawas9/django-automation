@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'crispy_forms',
     'crispy_bootstrap5',
+    'ckeditor',
      
     'dataentry',
     'uploads',
@@ -155,7 +156,18 @@ MESSAGE_TAGS = {
     50: "critical",
 }
 
+# Celery broker url
+
 CELERY_BROKER_URL = 'redis://localhost:6379'
+
+# CKEditor configurations
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+    },
+}
 
 
 # Email configuration

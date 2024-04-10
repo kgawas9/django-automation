@@ -74,7 +74,8 @@ def send_email_communication(email_subject, message, to_email, attachment=None):
         if attachment:
             # print(attachment)
             mail.attach_file(attachment)
-
+        
+        mail.content_subtype = "html"
         mail.send()
     except Exception as e:
         raise e

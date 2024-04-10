@@ -175,3 +175,5 @@ cython_debug/
 
 
 export_data/
+
+staticfiles/
