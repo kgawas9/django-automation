@@ -69,10 +69,10 @@ def send_email_communication(email_subject, message, to_email, attachment=None):
 
         mail = EmailMessage(email_subject, message, from_email, to_email)
         
-        print(attachment)
+        # print(attachment)
         
         if attachment:
-            print(attachment)
+            # print(attachment)
             mail.attach_file(attachment)
 
         mail.send()

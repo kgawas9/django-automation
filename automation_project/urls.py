@@ -27,5 +27,6 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('dataentry/', include('dataentry.urls')),
     path('users/', include('automationusers.urls')),
+    path('emails/', include('emails.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
