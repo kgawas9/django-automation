@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'ckeditor',
+    'anymail',
      
     'dataentry',
     'uploads',
@@ -172,13 +173,20 @@ CKEDITOR_CONFIGS = {
 
 # Email configuration
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = config('EMAIL_ID')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = config('EMAIL_ID')
+# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+# EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Automate with django <developer.automation@gmail.com'
 
 # Crispy forms
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+# Anymail configuration
+
+EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend" 
+ANYMAIL = {
+    "SENDINBLUE_API_KEY": config('SENDINBLUE_APIS_KEY'),
+}
